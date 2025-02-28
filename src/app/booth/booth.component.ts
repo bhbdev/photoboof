@@ -135,7 +135,9 @@ export class BoothComponent implements OnInit {
                 return;
             }
             this.images[this.curCanvas] = img;
+            this.canvas[this.curCanvas].classList.remove('fade-in');
             this.curCanvas = (this.curCanvas + 1) % 3;
+            
         });
     }
 
@@ -160,7 +162,11 @@ export class BoothComponent implements OnInit {
     showPrint() {
         // show a print preview
        // this._printService.print(this.images);
-       this._printService.generatePhotoStrip(this.photostrip.nativeElement);
+       this._printService.generatePhotoStrip(this.photostrip.nativeElement,this._printService.print);
+    }
+    showDownload() {
+        // download the photo strip
+        this._printService.generatePhotoStrip(this.photostrip.nativeElement,this._printService.download);
     }
 
 }

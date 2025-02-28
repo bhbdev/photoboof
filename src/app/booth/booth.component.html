@@ -162,6 +162,10 @@
             <canvas class="canvas" #canvas></canvas>
             <canvas class="canvas" #canvas></canvas>
           </section>
+          <div class="container">
+            <button (click)="showPrint()">Print</button>
+            <button (click)="showDownload()">Download</button>
+          </div>
         </div>
       
     </div>
@@ -177,7 +181,6 @@
       </fieldset>
       <fieldset>
           <legend>Filters</legend>
-          <button (click)="showPrint()">Print</button>
           <div style="display:flex; flex-direction:row; flex-wrap:wrap; gap:.25rem;">
           <ng-container *ngFor="let filter of filters; index as i; let last = last">
             <label *ngIf="!last" for="filter{{i+1}}">
