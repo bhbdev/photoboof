@@ -1,0 +1,196 @@
+<style >
+    main {
+        padding: 0 .1rem;
+    }
+
+    .content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+
+        @media (min-width: 768px) {
+            grid-template-columns: 3fr 220px;
+        }
+    }
+
+    #camera-wrapper,
+    #photo-strip {
+        box-shadow: 0 0 10px #000;
+        border: 1px solid #555;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        padding: 1rem 0;
+        flex-grow: 1;
+        position: relative;
+    }
+
+    #photo-strip {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        overflow-x: auto;
+        gap: 1rem;
+        padding: 0.8rem;
+        border: 3rem dotted #ffffff2a;
+        border-width: 0.8rem 0;
+
+        @media (min-width: 768px) {
+            flex-direction: column;
+            justify-content: center;
+            border-width: 0 0.8rem;
+        }
+    }
+
+    .video {
+        min-height: 30vh;
+        width: 100%;
+        max-width: 90%;
+        margin: 0;
+        padding: 0;
+        aspect-ratio: 4/3;
+        object-fit: cover;
+        @media screen and (min-width: 768px) {
+            max-width: 100%;
+            max-height: 100%;
+            width: 50vw;
+        }
+    }
+
+    .canvas {
+        max-width: 100%;
+        max-height: 100%;
+        width: 240px;
+        height: 140px;
+        aspect-ratio: 4/3;
+        object-fit: fill;
+        background-color: #333;
+    }
+
+    
+
+    #overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #0000003d;
+        color: #fff;
+        
+        .connect {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: #fff;
+            z-index: 1;
+            transition-duration: .2s;
+            opacity: .7;
+            &:hover {
+                opacity:1;
+                cursor: pointer;
+            }    
+        }
+        .start {
+            font-size: 2rem;
+            padding: 1rem 2rem;
+            background: #0000008c;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            z-index: 1;
+            transition-duration: .2s;
+            opacity: .7;
+            &:hover {
+                opacity:1;
+                cursor: pointer;
+            }
+        }
+
+    }
+
+
+    #shutter {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #ffffff7c;
+        opacity: 0;
+    }
+
+    .timer {
+        font-size: 4rem;
+        color: #fff;
+        animation: flashdown 1.02s ease-in infinite;
+    }
+
+
+</style>
+<main class="main">
+    <div class="content">
+
+        <section id="camera-wrapper">
+          <!-- <video id="video" src="http://192.168.1.114/videostream.cgi" autoplay="autoplay"></video> -->
+          <video class="video" #video playsinline muted autoplay></video>
+            
+            <div id="overlay"  class="overlay">
+                <ng-container *ngIf="!isConnected">
+                    <a href="#" class="connect" (click)="connect()">
+                      <fa-icon [icon]="faCamera" size="3x"></fa-icon>
+                      Connect to the camera
+                    </a>
+                </ng-container>
+                <ng-container *ngIf="isConnected">
+                  <button class="start" *ngIf="!timer.active" (click)="startTimer()">Start</button>
+                  <div *ngIf="timer.active" class="timer">{{ timer.value === 0 ? '😁' : timer.value }}</div>
+                  <div id="shutter" class="overlay {{ timer.value === 0 ? 'blink' : '' }}"></div>
+                </ng-container>
+            </div>
+            
+        </section>
+        <div>
+          <section id="photo-strip" #photostrip>
+            <canvas class="canvas" #canvas></canvas>
+            <canvas class="canvas" #canvas></canvas>
+            <canvas class="canvas" #canvas></canvas>
+          </section>
+        </div>
+      
+    </div>
+
+    <section #widgets id="widgets">
+      <fieldset>
+          <legend>Controls</legend>
+          <button (click)="playStream()">Play</button>
+          <button (click)="pauseStream()">Pause</button>
+          <button (click)="stopStream()">Stop</button>
+          <button (click)="takeSnapshot()">Snapshot</button>
+
+      </fieldset>
+      <fieldset>
+          <legend>Filters</legend>
+          <button (click)="showPrint()">Print</button>
+          <div style="display:flex; flex-direction:row; flex-wrap:wrap; gap:.25rem;">
+          <ng-container *ngFor="let filter of filters; index as i; let last = last">
+            <label *ngIf="!last" for="filter{{i+1}}">
+              <input type="radio" name="filter" id="filter{{i+1}}" (change)="changeFilter($event)" [checked]="filter === curFilter" />
+              {{filter}}
+            </label>
+            <div *ngIf="last" style="flex-grow:1;">
+              <input type="button" name="filter" id="filter{{i+1}}" (click)="changeFilter($event)" value="{{filter}}" />
+            </div>
+          </ng-container>
+          </div>
+      </fieldset>
+    </section>
+  </main>
+  
+  

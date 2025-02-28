@@ -1,12 +1,15 @@
+
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { BoothComponent } from "./booth/booth.component";
 
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
-})
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss',
+    imports: [BoothComponent]
+  })
+  
 export class AppComponent {
-  title = 'photoboof';
+    title = 'photoboof';
 }
+
