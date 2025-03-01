@@ -2,9 +2,6 @@ import { Component, ViewChild, ElementRef, OnInit,QueryList, ViewChildren, After
 import {CommonModule} from '@angular/common';
 import { CameraService } from '../services/camera.service';
 import { PrintService } from '../services/print.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-// import { faCamera, faPlay, faPause, faClose, faV } from '@fortawesome/free-solid-svg-icons';
-
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { 
     featherCamera, 
