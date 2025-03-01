@@ -1,10 +1,17 @@
-import { Component, ViewChild, ElementRef, OnInit,QueryList, ViewChildren } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit,QueryList, ViewChildren, AfterViewInit } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import { CameraService } from '../services/camera.service';
 import { PrintService } from '../services/print.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCamera } from '@fortawesome/free-solid-svg-icons';
+// import { faCamera, faPlay, faPause, faClose, faV } from '@fortawesome/free-solid-svg-icons';
 
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { 
+    featherCamera, 
+    featherPlay,
+    featherPause,
+    featherCameraOff,
+} from '@ng-icons/feather-icons';
 
 // define conts for the timer seconds and the number of images to take
 const TIMER_SECONDS = 3;
@@ -12,21 +19,23 @@ const MAX_IMAGES = 3;
 
 @Component({
   selector: 'app-booth',
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule, NgIcon],
+  providers: [provideIcons({featherCamera,featherPlay,featherPause,featherCameraOff})],
   templateUrl: './booth.component.html',
   styleUrl: './booth.component.scss'
 })
-export class BoothComponent implements OnInit {
+export class BoothComponent implements AfterViewInit {
  
     constructor(
         private _cameraService: CameraService,
-        private _printService: PrintService) {}
+        private _printService: PrintService
+    ) {}
 
     @ViewChild('video') video!: ElementRef;
     @ViewChild('photostrip') photostrip!: ElementRef;
     @ViewChildren('canvas', { read: ElementRef }) canvases!: QueryList<ElementRef>;
     
-    faCamera = faCamera;
+
     filters: string[] = ['grayscale', 'sepia', 'blur', 'brightness', 'contrast', 'hue-rotate',
                         'hue-rotate2', 'hue-rotate3', 'saturate', 'invert', 'clear'];
 
@@ -42,12 +51,7 @@ export class BoothComponent implements OnInit {
     curFilter: string = 'grayscale';
     isConnected: boolean = false;
 
-    ngOnInit() {
-        //this.connectStream();
-    }
     ngAfterViewInit() {
-        //this._cameraService.connect(this.video.nativeElement);
-        //this.isConnected = this._cameraService.isConnected();
         this.canvas = this.canvases.toArray().map(c => c.nativeElement);
     }
 
@@ -80,13 +84,11 @@ export class BoothComponent implements OnInit {
                     this.startTimer(true);
                 } else {
                     this.resetTimer();
-
                 }
-            }
-            
-        }, 1000);
-      
+            }   
+        }, 1000); 
     }
+
     resetTimer(): any {
         if (this.timer.id) {
             clearInterval(this.timer.id);
@@ -125,6 +127,7 @@ export class BoothComponent implements OnInit {
 
     stopStream() {
         this._cameraService.disconnect();
+        this.isConnected = this._cameraService.isConnected();
     }
 
     takeSnapshot() {

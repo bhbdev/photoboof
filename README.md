@@ -4,6 +4,7 @@ __Have fun taking photos!__
 
 This little project was built with curiosity while exploring WebRTC, Angular and HTML Canvas.  
 
+<!-- <img src="assets/pb-ss.png" alt="Photoboof screenshot"/> -->
 ---
 
 ## Dev Notes

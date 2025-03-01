@@ -1,19 +1,104 @@
 <style >
+/* camera controls along the bottom */
+#camera-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    &:hover {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+    
+}
+.control {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    &:hover {
+        color: #f0f0f0;
+    }
+}
+.group-start {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+.group-center {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+.group-end {
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+.snapshot {
+    position:absolute;
+    top: .5rem;
+    background-color: rgb(209, 27, 27);
+    color: white;
+    border: 1px solid white;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    line-height: 1rem;
+    cursor: pointer;
+    transition-duration: .2s;
+    box-shadow: 0 0 1px rgba(244, 242, 242, 0.999);
+    &:hover {
+        background-color: rgb(176, 9, 9);
+        color: rgb(194, 194, 194);
+    }
+    &:active {
+        background-color: rgb(176, 9, 9);
+        color: rgb(255, 255, 255);
+        transform: scale(0.95);
+    }
+}
 
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.36);
+    border-radius: 7px;
+    color: rgba(255, 255, 255, 0.36);
+    padding: .5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition-duration: .2s;
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    &:active {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+}
 
 
 </style>
+
 <main class="main">
     <div class="content">
 
         <section id="camera-wrapper">
-          <!-- <video id="video" src="http://192.168.1.114/videostream.cgi" autoplay="autoplay"></video> -->
-          <video class="video" #video playsinline muted autoplay></video>
+
+          <video class="camera" #video playsinline muted autoplay></video>
             
             <div id="overlay"  class="overlay">
                 <ng-container *ngIf="!isConnected">
                     <a href="#" class="connect" (click)="connect()">
-                      <fa-icon [icon]="faCamera" size="3x"></fa-icon>
+                      <ng-icon name="featherCamera" size="3.5rem"></ng-icon>
                       Connect to the camera
                     </a>
                 </ng-container>
@@ -22,32 +107,45 @@
                   <div *ngIf="timer.active" class="timer">{{ timer.value === 0 ? '😁' : timer.value }}</div>
                   <div id="shutter" class="overlay {{ timer.value === 0 ? 'blink' : '' }}"></div>
                 </ng-container>
-            </div>
-            
+            </div> 
+            <div id="camera-controls" *ngIf="isConnected">
+                <div class="group-start">
+                    <button class="control" (click)="playStream()" aria-label="Play" title="Play Camera">
+                        <ng-icon name="featherPlay"></ng-icon>
+                    </button>
+                    <button class="control" (click)="pauseStream()" aria-label="Pause" title="Pause Camera">
+                        <ng-icon name="featherPause"></ng-icon>
+                    </button>
+                </div>
+                <div class="group-center">
+                    <button class="snapshot" (click)="takeSnapshot()" aria-label="Snapshot" title="Snapshot">
+                        <ng-icon name="featherCamera"></ng-icon>
+                    </button>
+                </div>
+                <div class="group-end">
+                    <button class="control" (click)="stopStream()" aria-label="Disconnect" title="Disconnect Camera">
+                        <ng-icon name="featherCameraOff"></ng-icon>
+                    </button>
+                </div>
+            </div>  
         </section>
-        <div>
+
+        <section id="photos-wrapper">
           <section id="photo-strip" #photostrip>
             <canvas class="canvas" #canvas></canvas>
             <canvas class="canvas" #canvas></canvas>
             <canvas class="canvas" #canvas></canvas>
           </section>
           <div class="container" *ngIf="images.length == 3">
-            <button (click)="showPrint()">Print</button>
-            <button (click)="showDownload()">Download</button>
+            <button class="btn-outline" (click)="showPrint()">Print</button>
+            <button class="btn-outline" (click)="showDownload()">Download</button>
           </div>
-        </div>
+        </section>
       
     </div>
 
     <section #widgets id="widgets">
-      <fieldset>
-          <legend>Controls</legend>
-          <button (click)="playStream()">Play</button>
-          <button (click)="pauseStream()">Pause</button>
-          <button (click)="stopStream()">Stop</button>
-          <button (click)="takeSnapshot()">Snapshot</button>
-
-      </fieldset>
+      
       <fieldset>
           <legend>Filters</legend>
           <div style="display:flex; flex-direction:row; flex-wrap:wrap; gap:.25rem;">
