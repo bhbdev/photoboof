@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit,QueryList, ViewChildren, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnChanges,QueryList, ViewChildren, AfterViewInit } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import { CameraService } from '../services/camera.service';
 import { PrintService } from '../services/print.service';
@@ -8,6 +8,8 @@ import {
     featherPlay,
     featherPause,
     featherCameraOff,
+    featherPrinter,
+    featherDownload,
 } from '@ng-icons/feather-icons';
 
 // define conts for the timer seconds and the number of images to take
@@ -17,7 +19,7 @@ const MAX_IMAGES = 3;
 @Component({
   selector: 'app-booth',
   imports: [CommonModule, NgIcon],
-  providers: [provideIcons({featherCamera,featherPlay,featherPause,featherCameraOff})],
+  providers: [provideIcons({featherCamera,featherPlay,featherPause,featherCameraOff,featherPrinter,featherDownload})],
   templateUrl: './booth.component.html',
   styleUrl: './booth.component.scss'
 })
@@ -48,7 +50,11 @@ export class BoothComponent implements AfterViewInit {
     curFilter: string = 'grayscale';
     isConnected: boolean = false;
 
+    ngOnChanges(changes: any) {
+        console.log('ngOnChanges');
+    }
     ngAfterViewInit() {
+        console.log('ngAfterViewInit');
         this.canvas = this.canvases.toArray().map(c => c.nativeElement);
     }
 
@@ -141,6 +147,13 @@ export class BoothComponent implements AfterViewInit {
         });
     }
 
+    showPrint() {
+       this._printService.generatePhotoStrip(this.photostrip.nativeElement,this._printService.print);
+    }
+    showDownload() {
+        this._printService.generatePhotoStrip(this.photostrip.nativeElement,this._printService.download);
+    }
+
     changeFilter(event: any) {
         const el = event.target;
         const idx = el.id.replace(/filter/, '');
@@ -157,16 +170,6 @@ export class BoothComponent implements AfterViewInit {
             this.curFilter = effect;
             this.canvases.forEach(c => c.nativeElement.classList.add(effect));
         }
-    }
-
-    showPrint() {
-        // show a print preview
-       // this._printService.print(this.images);
-       this._printService.generatePhotoStrip(this.photostrip.nativeElement,this._printService.print);
-    }
-    showDownload() {
-        // download the photo strip
-        this._printService.generatePhotoStrip(this.photostrip.nativeElement,this._printService.download);
     }
 
 }

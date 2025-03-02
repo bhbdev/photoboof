@@ -19,8 +19,11 @@
     "@angular/router": "^19.2.0",
     "@ng-icons/core": "^30.3.0",
     "@ng-icons/feather-icons": "^30.3.0",
+    "@tailwindcss/postcss": "^4.0.9",
     "html2canvas": "^1.4.1",
+    "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
+    "tailwindcss": "^4.0.9",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

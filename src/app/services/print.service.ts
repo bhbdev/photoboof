@@ -21,7 +21,6 @@ export class PrintService {
         html2canvas(elem).then((canvas) => {
             ctx.drawImage(canvas, 0, 0, psCanvas.width, psCanvas.height);
             callbackFn(psCanvas.toDataURL('image/png'));
-            // this.print(psCanvas.toDataURL('image/png'));
         });
 
     }
