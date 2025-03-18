@@ -1,6 +1,3 @@
-<style>
-
-</style>
 
 <main class="main">
     <div class="content gap-3 px-2">
@@ -9,8 +6,7 @@
 
             <video class="grow min-h-[55vh] max-h-[475px]" #video playsinline muted autoplay></video>
             
-            <div *ngIf="isConnected"
-class="relative z-10 grid grid-flow-col grid-cols-[1fr_4fr_1fr] gap-2 p-4 xbg-inherit duration-300 opacity-50 border-t border-gray-500 hover:opacity-100">
+            <div *ngIf="isConnected" class="relative z-10 grid grid-flow-col grid-cols-[1fr_4fr_1fr] gap-2 p-4 duration-300 opacity-50 border-t border-gray-500 hover:opacity-100">
                 <div class="flex justify-start gap-3">
                     <button class="control" (click)="playStream()" aria-label="Play" title="Play Camera">
                         <ng-icon name="featherPlay"></ng-icon>

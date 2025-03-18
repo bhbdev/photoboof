@@ -32,7 +32,7 @@
               }
             ],
             "styles": [
-              "src/scss/styles.css"
+              "src/styles.css"
             ],
             "scripts": []
           },
@@ -84,7 +84,7 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "css",
+            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
